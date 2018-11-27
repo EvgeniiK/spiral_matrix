@@ -88,6 +88,8 @@
     
     <li ><a href="#method-i-each">#each</a>
     
+    <li ><a href="#method-i-enumerator">#enumerator</a>
+    
     <li ><a href="#method-i-even">#even</a>
     
     <li ><a href="#method-i-reverse_even">#reverse_even</a>
@@ -231,7 +233,7 @@ matrix.</p>
 
           
           <div class="method-source-code" id="random_matrix-source">
-            <pre><span class="ruby-comment"># File matrix.rb, line 40</span>
+            <pre><span class="ruby-comment"># File matrix.rb, line 46</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">random_matrix</span>(<span class="ruby-identifier">size</span>, <span class="ruby-identifier">max</span>=<span class="ruby-constant">DEFAULT_MAX_RANDOM</span>)
   <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">size</span>.<span class="ruby-identifier">times</span>.<span class="ruby-identifier">map</span> { <span class="ruby-identifier">size</span>.<span class="ruby-identifier">times</span>.<span class="ruby-identifier">map</span> { <span class="ruby-identifier">rand</span>(<span class="ruby-identifier">max</span>) }})
 <span class="ruby-keyword">end</span></pre>
@@ -257,7 +259,7 @@ matrix.</p>
         
         <div class="method-heading">
           <span class="method-name">each</span><span
-            class="method-args">(elements=nil) { |e| ... }</span>
+            class="method-args">(index=nil) { |e| ... }</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -267,18 +269,51 @@ matrix.</p>
         <div class="method-description">
           
           <p>Enumerating from the outer side of the matrix to the center There is
-reverse_each method that returns values from the center Can receive number
-of elements to use with the first parameter</p>
+reverse_each method that returns values from the center First parameter can
+receive index to use elements till this index</p>
           
           
 
           
           <div class="method-source-code" id="each-source">
-            <pre><span class="ruby-comment"># File matrix.rb, line 48</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">each</span>(<span class="ruby-identifier">elements</span>=<span class="ruby-keyword">nil</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
-  <span class="ruby-identifier">elements</span> = <span class="ruby-identifier">elements</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">spiral_output</span>.<span class="ruby-identifier">length</span>
+            <pre><span class="ruby-comment"># File matrix.rb, line 54</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">each</span>(<span class="ruby-identifier">index</span>=<span class="ruby-keyword">nil</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+  <span class="ruby-identifier">index</span> = <span class="ruby-identifier">index</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">spiral_output</span>.<span class="ruby-identifier">length</span>
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">spiral_output</span>.<span class="ruby-identifier">to_enum</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">block</span>
-  <span class="ruby-identifier">spiral_output</span>[<span class="ruby-value">0</span><span class="ruby-operator">..</span><span class="ruby-identifier">elements</span>].<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span> <span class="ruby-keyword">yield</span> <span class="ruby-identifier">e</span> }
+  <span class="ruby-identifier">spiral_output</span>[<span class="ruby-value">0</span><span class="ruby-operator">..</span><span class="ruby-identifier">index</span>].<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span> <span class="ruby-keyword">yield</span> <span class="ruby-identifier">e</span> }
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-enumerator" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">enumerator</span><span
+            class="method-args">()</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns reverse spiral result enumerator</p>
+          
+          
+
+          
+          <div class="method-source-code" id="enumerator-source">
+            <pre><span class="ruby-comment"># File matrix.rb, line 38</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">enumerator</span>
+  <span class="ruby-ivar">@enumerator</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Enumerator</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">spiral_output</span>.<span class="ruby-identifier">length</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">y</span><span class="ruby-operator">|</span> <span class="ruby-identifier">spiral_output</span>.<span class="ruby-identifier">reverse_each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span> <span class="ruby-identifier">y</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">e</span> }}
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -310,7 +345,7 @@ center</p>
 
           
           <div class="method-source-code" id="even-source">
-            <pre><span class="ruby-comment"># File matrix.rb, line 56</span>
+            <pre><span class="ruby-comment"># File matrix.rb, line 62</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">even</span>
   <span class="ruby-identifier">spiral_output</span>.<span class="ruby-identifier">select</span>(<span class="ruby-operator">&amp;</span><span class="ruby-value">:even?</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -344,7 +379,7 @@ outer side</p>
 
           
           <div class="method-source-code" id="reverse_even-source">
-            <pre><span class="ruby-comment"># File matrix.rb, line 62</span>
+            <pre><span class="ruby-comment"># File matrix.rb, line 68</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">reverse_even</span>
   <span class="ruby-identifier">even</span>.<span class="ruby-identifier">reverse</span>
 <span class="ruby-keyword">end</span></pre>

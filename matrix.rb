@@ -34,6 +34,12 @@ class SpiralMatrix
   end
 
   ##
+  # Returns reverse spiral result enumerator
+  def enumerator
+    @enumerator ||= Enumerator.new(spiral_output.length) { |y| spiral_output.reverse_each { |e| y << e }}
+  end
+
+  ##
   # Generates random matrix on the output
   # First parameter is size of the matrix
   # Second parameter optional - it is max random value of the element in the matrix.
@@ -95,10 +101,11 @@ class SpiralMatrix
   end
 end
 
-# matrix = SpiralMatrix.random_matrix(5)
-# sm = SpiralMatrix.new(matrix)
-# matrix.each { |e| p e }
-# p sm.matrix
+matrix = SpiralMatrix.random_matrix(5)
+sm = SpiralMatrix.new(matrix)
+p sm.each.next
+
+p sm.matrix
 # p "spiral output to center: #{sm.each { |e| e }}"
 # p "spiral output from center: #{sm.reverse_each(3).map { |e| e }}"
 # p "max: #{sm.max}"

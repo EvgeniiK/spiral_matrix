@@ -14,7 +14,7 @@ describe SpiralMatrix do
       expect(@matrix.each.to_a).to eq @to_center
     end
 
-    it 'returns 3 elements by spiral to center' do
+    it 'returns defined number of elements by spiral to center' do
       expect(@matrix.each(index) { |e| e }).to eq @to_center[0..index]
     end
   end
@@ -36,4 +36,23 @@ describe SpiralMatrix do
       expect(@matrix.reverse_even).to eq @to_center.select(&:even?)
     end
   end
+
+  describe '#enumerator' do
+
+    it 'returns enumerator object' do
+      expect(@matrix.enumerator).to be_an(Enumerator)
+    end
+
+    let(:elements)     { 3 }
+
+    it 'returns defined number of elements by spiral from center' do
+      expect(@matrix.enumerator.take(elements)).to eq @from_center[0..elements-1]
+    end
+
+    it 'returns even elements by spiral from center' do
+      expect(@matrix.enumerator.select(&:even?)).to eq @from_center.select(&:even?)
+    end
+  end
+
+
 end
