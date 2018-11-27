@@ -1,12 +1,29 @@
+gem 'rdoc'
+require 'rdoc/rdoc'
+
+##
+# This class allows to work with matrix spiral output as an enumerable.
+
 class SpiralMatrix
   include Enumerable
 
-  def initialize(size: nil, matrix: nil)
-    @size = (size % 2).zero? ? size + 1 : size
-    @matrix = matrix || SpiralMatrix.random_matrix(@size)
+  attr_reader :matrix
+
+  DEFAULT_SIZE = 5
+  DEFAULT_MAX_RANDOM = 10
+
+  def initialize(arg)
+    self.matrix = case arg
+                  when Integer
+                    SpiralMatrix.random_matrix(arg.abs )
+                  when Array
+                    arg
+                  else
+                    SpiralMatrix.random_matrix(DEFAULT_SIZE )
+                  end
   end
 
-  def self.random_matrix(size, max=100)
+  def self.random_matrix(size, max=DEFAULT_MAX_RANDOM)
     Array.new(size.times.map { size.times.map { rand(max) }})
   end
 
@@ -15,23 +32,24 @@ class SpiralMatrix
     spiral_output.each { |e| yield e }
   end
 
-  # For clarity
-  def show
-    @matrix.each{ |e| p e }
+  def even
+    spiral_output.select(&:even?)
   end
 
-  def even
-    spiral_output.select { |num| num.even? }
+  def reverse_even
+    even.reverse
   end
 
   private
+
+  attr_writer :matrix
 
   def spiral_output
     @spiral_output ||= spiral_iterator
   end
 
   def matrix_clone
-    @matrix_clone ||= @matrix.map {|row| row.clone}
+    @matrix_clone ||= matrix.map { |row| row.clone }
   end
 
   def spiral_iterator
@@ -49,8 +67,11 @@ class SpiralMatrix
   end
 end
 
-sm = SpiralMatrix.new(size: 5)
-sm.show
-sm.each { |e| p e }
-p sm.max
-p sm.even
+matrix = SpiralMatrix.random_matrix(5)
+sm = SpiralMatrix.new(nil)
+matrix.each { |e| p e }
+p sm.matrix
+p "spiral output to center: #{sm.each { |e| e }}"
+p "spiral output from center: #{sm.reverse_each.map { |e| e }}"
+p "max: #{sm.max}"
+p "even: #{sm.reverse_even}"
