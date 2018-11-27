@@ -44,11 +44,11 @@ class SpiralMatrix
   ##
   # Enumerating from the outer side of the matrix to the center
   # There is #reverse_each method that returns values from the center
-  # Can receive number of elements to use with the first parameter
-  def each(elements=nil, &block)
-    elements = elements || spiral_output.length
+  # First parameter can receive index to use elements till this index
+  def each(index=nil, &block)
+    index = index || spiral_output.length
     return spiral_output.to_enum unless block
-    spiral_output[0..elements].each { |e| yield e }
+    spiral_output[0..index].each { |e| yield e }
   end
 
   ##
@@ -95,11 +95,11 @@ class SpiralMatrix
   end
 end
 
-matrix = SpiralMatrix.random_matrix(5)
-sm = SpiralMatrix.new(matrix)
-matrix.each { |e| p e }
-p sm.matrix
-p "spiral output to center: #{sm.each { |e| e }}"
-p "spiral output from center: #{sm.reverse_each(3).map { |e| e }}"
-p "max: #{sm.max}"
-p "even: #{sm.reverse_even}"
+# matrix = SpiralMatrix.random_matrix(5)
+# sm = SpiralMatrix.new(matrix)
+# matrix.each { |e| p e }
+# p sm.matrix
+# p "spiral output to center: #{sm.each { |e| e }}"
+# p "spiral output from center: #{sm.reverse_each(3).map { |e| e }}"
+# p "max: #{sm.max}"
+# p "even: #{sm.reverse_even}"
