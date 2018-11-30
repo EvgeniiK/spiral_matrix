@@ -2,6 +2,23 @@ def random_matrix(size, max=10)
   Array.new(size.times.map { size.times.map { rand(max) }})
 end
 
+def spiral(m)
+  Enumerator.new do |y|
+    center = m.size / 2
+    n = 1
+    actions = {
+        center: lambda { n == 1 ? y << [m[center][center]] : [] },
+        left:   lambda { m[center-n][center-n..center+n-1].reverse },
+        down:   lambda { m[center-n+1..center+n].map { |row| p 'ds1'; row[center-n] }},
+        right:  lambda { m[center+n][center-n+1..center+n] },
+        up:     lambda { m[center-n..center+n-1].map { |row| p 'ds'; row[center+n] }.reverse },
+        inc:    lambda { n += 1; [] }
+    }
+    command_sequence = actions.keys.cycle
+    actions[command_sequence.next].call.each { |e| y << e } until n == center+1
+  end
+end
+
 def en(mat)
   Enumerator.new do |y|
     actions = {
@@ -11,12 +28,12 @@ def en(mat)
         up:    lambda { mat.map { |row| row.shift }},
     }
     command_sequence = actions.keys.cycle
-    p 'fdf'
+    p 'fn'
     until mat.empty?
-      p 'sdfasdfas'
       actions[command_sequence.next].call.each do |e|
-        p "from meth #{e}"
+        p 'each'
         y << e
+        p 'after each'
       end
     end
   end
@@ -24,16 +41,5 @@ end
 
 m = random_matrix(5)
 m.each {|e| p e }
-ev = en(m)
-p ev.to_a
-
-p ev.first(5)
-p ev.take(5)
-
-ev.each { |v| p "one: #{v}" }
-p ev.first(5)
-p ev.take(5)
-ev.each { |v| p "two: #{v}" }
-p ev.to_a
-# p "two: #{ev.next}"
-# p "three: #{ev.next}"
+s = spiral(m)
+p s.next
