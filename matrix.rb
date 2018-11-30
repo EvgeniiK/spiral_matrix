@@ -100,13 +100,3 @@ class SpiralMatrix
     result
   end
 end
-
-matrix = SpiralMatrix.random_matrix(5)
-sm = SpiralMatrix.new(matrix)
-p sm.each.next
-
-p sm.matrix
-# p "spiral output to center: #{sm.each { |e| e }}"
-# p "spiral output from center: #{sm.reverse_each(3).map { |e| e }}"
-# p "max: #{sm.max}"
-# p "even: #{sm.reverse_even}"
