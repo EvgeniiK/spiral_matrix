@@ -7,39 +7,31 @@ def spiral(m)
     center = m.size / 2
     n = 1
     actions = {
-        center: lambda { n == 1 ? y << [m[center][center]] : [] },
-        left:   lambda { m[center-n][center-n..center+n-1].reverse },
-        down:   lambda { m[center-n+1..center+n].map { |row| p 'ds1'; row[center-n] }},
-        right:  lambda { m[center+n][center-n+1..center+n] },
-        up:     lambda { m[center-n..center+n-1].map { |row| p 'ds'; row[center+n] }.reverse },
-        inc:    lambda { n += 1; [] }
+        center: lambda { y << m[center][center] if n == 1 },
+        left:   lambda {
+          c = center+n-1
+          until c < center-n
+            y << m[center-n][c]
+            c -= 1
+          end
+        },
+        down:   lambda { m[center-n+1..center+n].each { |row| y << row.first }},
+        right:  lambda { m[center+n][center-n+1..center+n].each { |e| y << e }},
+        up:     lambda {
+          c = center+n-1
+          until c < center-n
+            y << m[c][center+n]
+            c -= 1
+          end
+        },
+        inc:    lambda { n += 1 }
     }
     command_sequence = actions.keys.cycle
-    actions[command_sequence.next].call.each { |e| y << e } until n == center+1
-  end
-end
-
-def en(mat)
-  Enumerator.new do |y|
-    actions = {
-        right: lambda { mat.shift },
-        down:  lambda { mat.map { |row| row.pop }},
-        left:  lambda { mat.pop.reverse },
-        up:    lambda { mat.map { |row| row.shift }},
-    }
-    command_sequence = actions.keys.cycle
-    p 'fn'
-    until mat.empty?
-      actions[command_sequence.next].call.each do |e|
-        p 'each'
-        y << e
-        p 'after each'
-      end
-    end
+    actions[command_sequence.next].call until n > center
   end
 end
 
 m = random_matrix(5)
 m.each {|e| p e }
 s = spiral(m)
-p s.next
+p s.to_a
